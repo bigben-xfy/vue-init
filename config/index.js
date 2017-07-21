@@ -11,7 +11,8 @@ module.exports = {
         assetsPublicPath: '/',
         productionSourceMap: true,
         productionGzip: false,
-        productionGzipExtensions: ['js', 'css']
+        productionGzipExtensions: ['js', 'css'],
+	    cssSourceMap: true
     },
 	/*test92: {
 		env: {

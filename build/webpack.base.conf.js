@@ -38,48 +38,55 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.vue', '.less', '.css', '.scss'],
         //fallback: [path.join(__dirname, '../node_modules')],
-	    modules: [path.resolve(__dirname, "src"), "node_modules"],
+	    modules: [path.join(__dirname, 'src'), 'node_modules'],
         alias: {
             'vue$': 'vue/dist/vue.common.js',
             'src': path.resolve(__dirname, '../src'),
-            'assets': path.resolve(__dirname, '../src/assets'),
+            //'assets': path.resolve(__dirname, '../src/assets'),
             'components': path.resolve(__dirname, '../src/components')
         }
     },
     resolveLoader: {
-	    //modules: [path.resolve(__dirname, "src"), "node_modules"]
         //fallback: [path.join(__dirname, '../node_modules')]
     },
     module: {
     	rules: [{
 		    test: /\.vue$/,
-		    loader: 'vue-loader'
+		    loader: 'vue-loader',
+		    include: projectRoot
+	    }, {
+		    test: /\.css/,
+		    use: 'css-loader?minimize'
 	    }, {
 		    test: /\.js$/,
-		    loader: 'babel-loader',
+		    loader: 'babel-loader?cacheDirectory',
 		    include: projectRoot,
 		    exclude: /node_modules/
 	    }, {
 		    test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
-		    loader: 'url-loader',
-		    query: {
-			    limit: 10000,
-			    name: utils.assetsPath('img/[name].[hash:7].[ext]')
+		    use: {
+			    loader: 'url-loader',
+			    options: {
+				    limit: 10000,
+				    name: utils.assetsPath('img/[name].[hash:7].[ext]')
+			    }
 		    }
 	    }, {
 		    test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-		    loader: 'url-loader',
-		    query: {
-			    limit: 10000,
-			    name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+		    use: {
+			    loader: 'url-loader',
+			    options: {
+				    limit: 10000,
+				    name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+			    }
 		    }
 	    }]
     },
 	devtool: "source-map",
 	plugins: [
-		new UglifyJsPlugin({
+		/*new UglifyJsPlugin({
 			sourceMap: true
-		}),
+		}),*/
 		new webpack.LoaderOptionsPlugin({
 			minimize: true
 		}),
@@ -91,7 +98,8 @@ module.exports = {
 			test: /\.vue$/,
 			options: {
 				loaders: utils.cssLoaders({
-					sourceMap: useCssSourceMap
+					sourceMap: useCssSourceMap,
+					extract: true
 				}),
 				postcss: [
 					autoprefixer({
